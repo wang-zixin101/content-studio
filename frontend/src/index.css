@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Light Visual Tokens —— 浅色 / 微暖 / 安静 / 高密度
+ *
+ * 层级靠「背景明度差」建立，不靠边框和阴影：
+ *   canvas(98%) → sidebar(96.5%) → surface(100%)
+ *
+ * 色相统一走 30-40（暖），避免冷蓝灰的企业后台感。
+ * 蓝色只用于 selected / link / focus / primary action。
+ */
+
+@layer base {
+  :root {
+    /* ---- 背景层级 ---- */
+    --canvas: 40 20% 98%;          /* 页面最底 */
+    --background: 40 20% 98%;      /* 兼容 shadcn 命名 */
+    --sidebar: 40 16% 96.5%;       /* 侧栏，比 canvas 略深 */
+    --surface: 0 0% 100%;          /* 内容面板，最亮 */
+    --card: 0 0% 100%;
+    --card-foreground: 30 8% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 8% 12%;
+
+    /* ---- 交互态 ---- */
+    --hover: 40 14% 95%;           /* 行 hover */
+    --selected: 214 90% 96%;       /* 选中行（极浅） */
+    --accent: 214 90% 96%;         /* shadcn accent = selected */
+    --accent-foreground: 30 8% 12%;
+
+    /* ---- 文字 ---- */
+    --foreground: 30 8% 12%;       /* 主文本 #211F1C */
+    --text-secondary: 30 6% 42%;   /* 次要 #726E68 */
+    --text-tertiary: 30 5% 58%;    /* 第三级 #97938D（B3 新增，替代 /70 /60 透明度写法） */
+    --muted: 40 14% 95%;
+    --muted-foreground: 30 5% 52%; /* 兼容 shadcn 命名，新代码请用 text-secondary */
+
+    /* ---- 线与输入 ---- */
+    --border: 40 10% 90%;          /* hairline */
+    --divider: 40 10% 93%;         /* 更弱的内部细分隔 */
+    --input: 40 10% 90%;
+
+    /* ---- 强调色（克制使用）---- */
+    --primary: 30 8% 12%;          /* 主按钮走深墨色，不用品牌蓝 */
+    --primary-foreground: 40 20% 98%;
+    --ring: 212 92% 52%;           /* focus ring = accent 蓝 */
+    --brand: 212 92% 52%;          /* 唯一的功能蓝 */
+
+    /* ---- 语义色（B3：降低饱和度，只在真正需要表达状态时出现）---- */
+    --info: 212 72% 45%;           /* 进行中 */
+    --success: 152 45% 36%;        /* 已分析 / 完成 */
+    --warning: 32 78% 42%;         /* 暂停 / 需注意（不是错误） */
+    --destructive: 0 58% 47%;      /* 失败 / 删除 */
+    --danger: 0 58% 47%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* ---- 业务标识 ---- */
+    --mine: 212 80% 46%;
+    --benchmark: 28 72% 46%;
+
+    /* ---- 形状 ---- */
+    --radius: 0.375rem;            /* 6px，控件基准 */
+
+    /* ---- 浮层阴影（唯一允许的阴影）---- */
+    --shadow-popover: 0 4px 12px rgba(20, 18, 15, 0.08),
+                      0 1px 3px rgba(20, 18, 15, 0.06);
+    --shadow-dialog: 0 16px 40px rgba(20, 18, 15, 0.14),
+                     0 2px 8px rgba(20, 18, 15, 0.08);
+  }
+
+  /*
+   * 深色主题暂时保留变量定义（供将来可选切换），
+   * 但本轮不启用任何深色入口，也不再有任何 dark: 硬编码。
+   */
+  .dark {
+    --canvas: 240 6% 7%;
+    --background: 240 6% 7%;
+    --sidebar: 240 6% 9%;
+    --surface: 240 6% 9%;
+    --card: 240 6% 9%;
+    --card-foreground: 0 0% 96%;
+    --popover: 240 6% 9%;
+    --popover-foreground: 0 0% 96%;
+    --hover: 240 4% 14%;
+    --selected: 214 40% 20%;
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 96%;
+    --foreground: 0 0% 96%;
+    --text-secondary: 0 0% 70%;
+    --muted: 240 4% 14%;
+    --muted-foreground: 240 5% 60%;
+    --border: 240 5% 17%;
+    --divider: 240 5% 15%;
+    --input: 240 5% 17%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 240 6% 9%;
+    --ring: 212 92% 62%;
+    --brand: 212 92% 62%;
+    --info: 212 72% 62%;
+    --destructive: 0 52% 48%;
+    --danger: 0 52% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 152 45% 50%;
+    --warning: 38 72% 55%;
+    --mine: 213 70% 62%;
+    --benchmark: 32 75% 58%;
+    --shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-dialog: 0 16px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-canvas text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 中文正文默认行高更舒展 */
+  p,
+  li {
+    line-height: 1.65;
+  }
+
+  /* 滚动条：极轻，不抢视线 */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.35);
+    background-clip: content-box;
+  }
+
+  /* 统一 focus：只有键盘聚焦才显示 ring */
+  :focus-visible {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* 浮层专用阴影 */
+  .shadow-popover {
+    box-shadow: var(--shadow-popover);
+  }
+  .shadow-dialog {
+    box-shadow: var(--shadow-dialog);
+  }
+}
